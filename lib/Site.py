@@ -1,4 +1,4 @@
-from Queue import Queue
+from Queue import queue
 import requests
 import time
 import re
