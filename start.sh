@@ -1,4 +1,4 @@
-!#/bin/bash
+#!/bin/bash
 
 systemctl status docker.service 
 systemctl enable docker.service 
