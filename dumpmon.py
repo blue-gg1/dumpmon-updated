@@ -1,10 +1,12 @@
 # dumpmon.py
 # Author: Jordan Wright
-# Version: 0.0 (in dev)
+# Updated: Me
+# Version: 0.1 (simple upgrade to work on new systems)
 
 # ---------------------------------------------------
 # To Do:
 #
+#   - Make it work with modern systems
 #	- Refine Regex
 #	- Create/Keep track of statistics
 
