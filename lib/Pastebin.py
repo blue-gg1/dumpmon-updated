@@ -1,7 +1,7 @@
-from Site import Site
-from Paste import Paste
+import Site
+import Paste
 from bs4 import BeautifulSoup
-from helper import helper
+import helper
 from time import sleep
 from settings import SLEEP_PASTEBIN
 from twitter import TwitterError
