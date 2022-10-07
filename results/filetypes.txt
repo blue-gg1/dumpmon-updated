@@ -1,3 +1,4 @@
+filetypes.txt:      empty
 output.urls.log:    ASCII text
 raw.php?i=0zeHUqG0: C source, ASCII text, with CRLF line terminators
 raw.php?i=1C2qw5ya: ASCII text, with CRLF line terminators

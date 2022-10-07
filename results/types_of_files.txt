@@ -1,0 +1,16 @@
+    ASCII text
+ ASCII text
+ ASCII text, with CRLF line terminators
+ ASCII text, with no line terminators
+ C source, ASCII text, with CRLF line terminators
+ C++ source, ASCII text, with CRLF line terminators
+ C++ source, Unicode text, UTF-8 text, with CRLF line terminators
+      empty
+ Generic INItialization configuration [stalker_step_manager]
+ Java source, ASCII text, with CRLF line terminators
+ JSON text data
+ LaTeX 2e document, ASCII text, with CRLF line terminators
+ Python script, ASCII text executable, with CRLF line terminators
+ Python script, Unicode text, UTF-8 text executable, with CRLF line terminators
+ Unicode text, UTF-8 text, with CRLF line terminators
+ XML 1.0 document, ASCII text, with CRLF line terminators
