@@ -1,6 +1,5 @@
-import site
+from lib.Site import Site
 from lib.Paste import Paste
-# from lib.paste import Paste
 from bs4 import BeautifulSoup
 import lib.helper
 from time import sleep
