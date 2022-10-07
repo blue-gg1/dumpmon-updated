@@ -7,7 +7,7 @@ from requests import ConnectionError
 from twitter import TwitterError
 from settings import USE_DB, DB_HOST, DB_PORT
 import logging
-import helper
+import lib.helper
 
 
 class Site(object):
@@ -75,6 +75,7 @@ class Site(object):
                 self.ref_id = paste.id
                 logging.info('[*] Checking ' + paste.url)
                 paste.text = self.get_paste_text(paste)
+                # this may have to be changed to lib.helper. see the imports
                 tweet = helper.build_tweet(paste)
                 if tweet:
                     logging.info(tweet)
