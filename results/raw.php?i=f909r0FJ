@@ -1,0 +1,193 @@
+#include <math.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <stdint.h>
+#include "helpers.h"
+
+//const int BITMAPINFOHEADER = 14;
+//const int BITMAPFILEHEADER = 40;
+
+typedef uint8_t  BYTE;
+typedef uint32_t DWORD;
+typedef int32_t  LONG;
+typedef uint16_t WORD;
+
+// Convert image to grayscale
+void grayscale(int height, int width, RGBTRIPLE image[height][width])
+{
+    for (int i = 0; i < height; i++)
+    {
+        for (int j = 0; j < width; j++)
+        {
+            //get RGBTRIPLE average
+            BYTE blue = image[i][j].rgbtBlue;
+            BYTE green = image[i][j].rgbtGreen;
+            BYTE red = image[i][j].rgbtRed;
+            double avg = round((red + blue + green) / 3.0);
+
+            //update
+            image[i][j].rgbtBlue = avg;
+            image[i][j].rgbtGreen = avg;
+            image[i][j].rgbtRed = avg;
+        }
+    }
+    return;
+}
+
+// Reflect image horizontally
+void reflect(int height, int width, RGBTRIPLE image[height][width])
+{
+    for (int i = 0; i < height; i++)
+    {
+        for (int j = 0; j < width / 2; j++)
+        {
+            //swap each RGBTRIPLE with its reflective counterpart
+            RGBTRIPLE temp = image[i][j];
+            image[i][j] = image[i][width - j - 1];
+            image[i][width - j - 1] = temp;
+        }
+    }
+    return;
+}
+
+// Blur image
+void blur(int height, int width, RGBTRIPLE image[height][width])
+{
+    RGBTRIPLE copy[height][width];
+    //for each row in the image
+    for (int i = 0; i < height; i++)
+    {
+        //for each pixel in the row
+        for (int j = 0; j < width; j++)
+        {
+            //find the avg of all 9 pixels
+            double sum_red = 0;
+            double sum_blue = 0;
+            double sum_green = 0;
+
+            double num_runs = 0;
+            //ensure that we do not exceed array in +ve or -ve direction
+            //creates a loop that goes through -1, 0, 1, enabling us to check the rows before, current, and after
+            for (int k = -1; k < 2; k++)
+
+            {
+                //creates loop that goes from -1,0,1 enabling to check the pixels before, current and after
+                for (int l = -1; l < 2; l++)
+                {
+                    // only do the following if we have not exceeded array indexes for row and column
+                    if ((i + k) < 0 || (i + k) >= height || (j + l) < 0 || (j + l) >= width)
+                    {
+                        continue;
+                        //printf("%i\n", num_runs);
+                    }
+
+                    sum_red += image[i + k][ j + l].rgbtRed;
+                    sum_blue += image[i + k][ j + l].rgbtBlue;
+                    sum_green += image[i + k][ j + l].rgbtGreen;
+
+                    num_runs++;
+
+                }
+
+            }
+
+
+            copy[i][j].rgbtRed = round(sum_red / num_runs);
+            copy[i][j].rgbtBlue = round(sum_blue / num_runs);
+            copy[i][j].rgbtGreen = round(sum_green / num_runs);
+
+
+        }
+    }
+    for (int i = 0; i < height; i++)
+    {
+        for (int j = 0; j < width; j++)
+        {
+            image[i][j] = copy[i][j];
+        }
+    }
+    return;
+}
+
+// Detect edges
+void edges(int height, int width, RGBTRIPLE image[height][width])
+{
+    RGBTRIPLE copy[height][width];
+    int gx[3][3] = {{-1, 0, 1}, {-2, 0, 2}, {-1, 0, 1}};
+    int gy[3][3] = {{-1, -2, -1}, {0, 0, 0}, {1, 2, 1}};
+    for (int i = 0; i < height; i++)
+    {
+        for (int j = 0; j < width; j++)
+        {
+            //find the avg of all 9 pixels
+            long gx_red = 0;
+            long gx_blue = 0;
+            long gx_green = 0;
+            long gy_red = 0;
+            long gy_blue = 0;
+            long gy_green = 0;
+
+            //loop from -1 to 1, to enable checking of items before and after current item
+            for (int k = -1; k < 2; k++)
+            {
+                for (int l = -1; l < 2; l++)
+                {
+                    //if item goes out of bound of array, skip
+                    if ((i + k) < 0 || (i + k) >= height || (j + l) < 0 || (j + l) >= width)
+                    {
+                        continue;
+
+                    }
+
+                    //calculate sobel edge sum
+                    gx_red += image[i + k][ j + l].rgbtRed * gx[k + 1][l + 1];
+                    gx_blue += image[i + k][ j + l].rgbtBlue * gx[k + 1][l + 1];
+                    gx_green += image[i + k][ j + l].rgbtGreen * gx[k + 1][l + 1];
+                    gy_red += image[i + k][ j + l].rgbtRed * gy[k + 1][l + 1];
+                    gy_blue += image[i + k][ j + l].rgbtBlue * gy[k + 1][l + 1];
+                    gy_green += image[i + k][ j + l].rgbtGreen * gy[k + 1][l + 1];
+
+
+                }
+
+            }
+
+            //calculate the sobel edge detection sq root
+            double red_final = round(sqrt(gx_red * gx_red + gy_red * gy_red));
+            double blue_final = round(sqrt(gx_blue * gx_blue + gy_blue * gy_blue));
+            double green_final = round(sqrt(gx_green * gx_green + gy_green * gy_green));
+
+            if (red_final > 255)
+            {
+                red_final = 255;
+            }
+
+            if (blue_final > 255)
+            {
+                blue_final = 255;
+            }
+
+            if (green_final > 255)
+            {
+                green_final = 255;
+            }
+
+            copy[i][j].rgbtRed = red_final;
+            copy[i][j].rgbtBlue = blue_final;
+            copy[i][j].rgbtGreen = green_final;
+
+        }
+
+
+    }
+
+    for (int i = 0; i < height; i++)
+    {
+        for (int j = 0; j < width; j++)
+        {
+            image[i][j] = copy[i][j];
+        }
+    }
+
+    return;
+}

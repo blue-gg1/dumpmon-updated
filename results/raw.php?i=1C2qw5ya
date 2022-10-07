@@ -1,0 +1,24 @@
+import math
+points = [[2,3], [12,30], [40,50], [5,1], [12,10], [3,4]]
+
+# Closest Pair Problems
+# Agus Supriyatna
+def closest_pair(P):
+    n = len(P)
+    dmin = 9999
+    
+    P1 = P[0]
+    P2 = P[1]
+    
+    for i in range(n-1):
+        for j in range(i+1, n):
+            d = math.sqrt((P[i][0] - P[j][0])**2 + (P[i][1] - P[j][1])**2)
+            if d < dmin:
+                dmin = d
+                P1 = P[i]
+                P2 = P[j]
+                
+    return [P1, P2], dmin
+                
+    
+closest_pair(points)

@@ -1,0 +1,41 @@
+server {
+        listen 80;
+        listen [::]:80;
+
+        root /var/www/servicedesk/html;
+        index index.html index.php index.htm index.nginx-debian.html;
+
+        server_name 192.168.4.180 www.servicedesk;
+
+        location / {
+        if (-f $document_root/reconstruction.html) {
+            return 503;
+        }
+    
+        try_files $uri $uri/ =404;
+ 
+    }
+ 
+    error_page 503 = @maintenance;
+        location @maintenance {
+            if ($remote_addr !~ "^192.168.4.64"){
+                rewrite ^(.*)$ /reconstruction.html break;
+            }
+	    if ($remote_addr !~ "^192.168.4.19"){
+		rewrite ^(.*)$ /reconstruction.html break;
+	    }
+	    if ($remote_addr !~ "^192.168.4.18"){
+		rewrite ^(.*)$ /reconstruction.html break;
+	    }
+    }
+
+	location ~ \.php$ {
+        	include snippets/fastcgi-php.conf;
+        	fastcgi_pass unix:/var/run/php/php7.4-fpm.sock;
+     	}
+
+    	location ~ /\.ht {
+        	deny all;
+    	}
+
+}

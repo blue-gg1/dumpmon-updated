@@ -1,0 +1,12 @@
+net.fit(X_test, shuffle=True)
+Y_test_predict = net.predict(X_test)
+
+res_df = pd.DataFrame(X_test)
+res_df['Class'] = Y_test_predict
+df_weights = pd.DataFrame(net.weights)
+fig = go.Figure(data=[
+    go.Scatter3d(
+        x=res_df[0], y=res_df[1], z=res_df[2], mode='markers', marker=dict(size=4, color=res_df.Class)
+        )
+    ])
+fig.show()

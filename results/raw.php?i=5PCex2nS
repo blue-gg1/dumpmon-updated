@@ -1,0 +1,40 @@
+/*******************************/
+/*   GROOVY - Custom Fields    */
+/*******************************/
+
+// Obtener el valor de un CustomField
+// Obtener el valor de un customField de un formulario (validador)
+// Obtener valor de un customField original (validador)
+// Setear el valor de un customField
+
+/************************************************************************/
+
+// Obtener el valor de un CustomField
+def requirementStatusKey = "customfield_20109"
+def requirementStatusCf = customFieldManager.getCustomFieldObject(requirementStatusKey)
+def requirementStatusValue = issue.getCustomFieldValue(requirementStatusCf)
+if ("Yes".equals(requirementStatusValue?.toString())) { .....
+
+//// Opcion 2
+def requirementStatusValue = issue.getCustomFieldValue(requirementStatusCf) as String
+if ("Yes".equals(requirementStatusValue)) { ..... }
+/************************************/
+
+// Obtener el valor de un customField de un formulario (validador)
+def coreLocalName = "CORE/LOCAL"
+def coreLocalFormValue = cfValues[coreLocalName]
+coreLocalFormValue?.contains("CORE")
+/************************************/
+
+// Obtener valor de un customField original (validador)
+def currentValue = issue.getCustomFieldValue(regTestRequiredCf)
+def originalValue = originalIssue.getCustomFieldValue(regTestRequiredCf)
+/************************************/
+
+// Setear el valor de un customField
+def requirementStatusKey = "customfield_20109"
+def requirementStatusCf = customFieldManager.getCustomFieldObject(requirementStatusKey)
+issue.setCustomFieldValue(requirementStatusCf , "New value")
+.....
+issueManager.updateIssue(userAdmin, issue, EventDispatchOption.DO_NOT_DISPATCH, false)
+/************************************/

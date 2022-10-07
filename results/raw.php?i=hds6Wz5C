@@ -1,0 +1,47 @@
+window.addEventListener("load", solve); 
+
+function solve() {
+  const make = document.getElementById("make");
+  const model = document.getElementById("model");
+  const year = document.getElementById("year");
+  const fuel = document.getElementById("fuel");
+  console.log(fuel.value);
+  const originalCost = document.getElementById("original-cost");
+  const sellingPrice = document.getElementById("selling-price");
+
+  // if (
+  //   Number(originalCost.value > Number(sellingPrice.value)) ||
+  //   make.value == "" ||
+  //   model.value == "" ||
+  //   year.value == "" ||
+  //   fuel.value == ""
+  // ) {
+  //   return;
+ 
+  const publishBtn = document.getElementById("publish");
+  const table = document.getElementById("table-body");
+
+  publishBtn.addEventListener("click", function () {
+    console.log(make.value);
+    console.log(model.value);
+    console.log(year.value);
+    console.log(fuel.value);
+    console.log(originalCost.value);
+    console.log(sellingPrice.value);
+    const tr = document.createElement("tr");
+    tr.classList.add("row");
+    tr.innerHTML = `
+    <td>${make.value}</td>
+    <td>${model.value}</td>
+    <td>${year.value}</td>
+    <td>${fuel.value}</td>
+    <td>${originalCost.value}</td>
+    <td>${sellingPrice.value}</td>
+    <td>
+    <button class='action-btn edit'>Edit</button>
+    <button class='action-btn sell'>Sell</button>
+    </td>
+    `;
+    table.appendChild(tr);
+  });
+}

@@ -1,0 +1,187 @@
+
+
+
+for(int i = 0; i < n; i++) cin » A[il; for(int i = 0; i < n; i++) cin »> B[il;
+-
+thers
+int prec[n/K+1][n/K+1];
+vector<int> AA[n/K+1];
+vector<int> BB[n/K+1];
+memset (prec, 0, sizeof prec); vector<int> v;
+{
+set<int> st[2][n/K+1];
+for(int i = 0; i < n; i++){
+st[0][i/K].insert(A[il): st[l][i/K].insert(B[il):
+}
+for(int i = 0; i < n/K;
+1++) f
+AA[i] = vector<int>(st[0][i]. begin (),st[0][i].end ())
+BB[i] = vector<int (st[l|[il.begin(),st[1][i].end ())
+}
+set<int> st;
+
+for(int i = 0; K * i < n; i++){
+for (int j = 0; K * j < n; j++){
+int p1 = K * i, p2 = K*j:
+int mxl = 0, mx2 = 0;
+st.clear () ;
+for(int t = p2; t < min(n,p2 + K); t++) {
+st.insert (B[t]);
+}
+V = vector<int>(st.begin(),st.end ()) ;
+for(int t = pl; t < min(n.pl + K); t++) {
+mx1 = max (mxl,A[t]);
+prec[i][jl = max(prec[i][jl,f(v,A[t]));
+}
+st.clear ();
+for(int t = pl; t < min(n,pl + K); t++){
+st.insert (A[t]);
+}
+V = vector<int>(st.begin () ,st.end ()) ;
+for(int t = p2; t < min(n,p2 + K); t++){
+mx2 = max (m×2, B[t]);
+prec[i][jl = max(prec[i|[jl,f(v, B[t])) ;
+}
+prec (1][jl = max (prec[i][jl, (mx1+mx2) 8M) ;
+T
+}
+}
+
+while (q--){
+int a b,c,d;
+cin »> a >> b >> c >> d;
+G-
+b
+int block11 = a/K;
+int block12 = b/K
+int block21 = c/K;
+int block22 = d/K;
+int ans = 0;
+int MX1 = 0, MX2 =
+for(int i = a; i <= b; i++) MX1 = max(MX1,A[i])
+for(int
+i <= d: 1++) MX2 = max (MX2,B[1])
+[다
+forint i = blockll+1; i <= block12-1;
+i++){
+for(int j = block21+1; j <= block22-1; j++){
+ans = max (ans,prec[i][il);
+cerr << "Segments ["
+<<i*K+1
+くく
+(i+1）*K
+<<
+F
+-
+}
+
+for(int i = a; i < min(b+1, (block11+1)*K); i++){
+MX1 = max (MX1,A[i]);
+114
+115
+=
+for(int j = c; j < min(d+1, (block21+1)*K); j++){
+116
+int S = A[il + B[il;
+if (S >= M) S -= M;
+117
+ans = max (ans, S);
+118
+119
+120
+for(int j = max (c‚block22*K); j <= d; j++){
+121
+int S = Alil + B[il;
+if (S >= M) S -= M;
+122
+ans = max (ans, S);
+123
+124
+125
+for(int i = block21+1; j <- block22-1; j++){
+MX2 = max (MX2, BB[jJ back());
+126
+ans = max(ans, f(BB[i] ‚A[il));
+127
+128
+129
+}
+
+for(int i = max(a, block12*K); i <= b; i++){
+MX1 = max (MX1,A[i]);
+132
+=
+133
+for(int j = c; j < min(d+1, (block21+1)*K); j++){
+int S = Ali] + Blil;
+134
+if(S >= M) S -= M;
+135
+ans = max (ans,S);
+136
+137
+-
+}
+138
+for(int j = max (c, block22*K); j <= d; j++){
+int S = Ali] + Blil;
+139
+if (S >= M) S -= M:
+140
+ans = max (ans,S) ;
+141
+142
+143
+for(int j = block21+1; j == block22-1; j++){
+MX2 = max (MX2 , BB[i1 . back()) .
+144
+ans = max (ans, f (BB [j1, A[il))
+145
+146
+147
+}
+}
+
+for (int j = c; j < min(d+1, (block21+1)*K) ; j++) {
+MX2 = max (MX2, B[j1);
+for(int i = a; i < min(b+1, (block11+1)*K); 1++){
+int S = Alil + B[il;
+if (S >= M) S - = M;
+ans = max (ans,S);
+=
+E
+UT AWN
+6
+7
+8
+9
+}
+for(int i = max(a, block12*K); i == b; i++){
+int S = Ali] + B[il;
+if (S >= M) S -= M;
+ans = max (ans,S);
+for (int i = blockll+1; j <= block12-1; j++){
+MX1 = max (MX1, AA[i].back ()) ;
+ans = max (ans, f(AA[il,B[jl));
+}
+}
+
+for(int j = max (c,block22*K); j <= d; j++) {
+MX2 = max (MX2,B[jl);
+for (int i = a; i < min(b+1, (block11+1)*K); i++){
+int S = Alil + B[il
+if (S >= M) S -= M;
+ans = max (ans,S).
+for(int i = max(a, block12 K); i <- b; i++){
+int S = Ali] + BLjI:
+if (S >= M) S -= M;
+ans = max (ans, S);
+}
+E
+for(int i = blockll+1; j <= block12-1; j++){
+MX1 = max (MX1, AA[il.back() );
+ans = max (ans, f (AA[i], B[jl)
+}
+}
+ans = max (ans, (MX1+MX2)%M) -
+cout << ans <= "\n" :

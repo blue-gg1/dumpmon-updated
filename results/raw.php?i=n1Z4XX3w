@@ -1,0 +1,18 @@
+            incoming = pd.DataFrame(session.run(income_data_obtain, din=din).data())
+            outcoming = pd.DataFrame(session.run(outcome_data_obtain, din=din).data())
+
+            for _, pred_row in incoming.iterrows():
+                for _, flw_row in outcoming.iterrows():
+                    session.run(
+                        '''
+                        MATCH (n)
+                        WHERE n.DIN = $din1 AND n.type = $type1
+                        MATCH (m)
+                        WHERE m.DIN = $din2 AND m.type = $type2
+                        MERGE (n)-[r:FOLLOWS]->(m)
+                        SET r.weight = coalesce(r.weight, 1);
+                        ''',
+                        din1=pred_row.din, type1=pred_row.type,
+                        din2=flw_row.din, type2=flw_row.type,
+                    )
+            session.run("MATCH (n) WHERE n.DIN = $din DETACH DELETE n", din=din)

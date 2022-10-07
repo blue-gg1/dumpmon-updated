@@ -1,0 +1,17 @@
+def valori_distincte(a, b, c):
+    eq = lambda x, y : x == y
+    if eq(a, b) and eq(b, c):
+        print("toate argumentele sunt egale")
+    elif eq(a, b):
+        print("arg 1 si 2 sunt egale")
+    elif eq(a, c):
+        print("arg 1 si 3 sunt egale")
+    elif eq(b, c):
+        print("arg 2 si 3 sunt egale")
+    else:
+        print("toate argumentele sunt distincte")
+
+a = input("a=")
+b = input("b=")
+c = input("c=")
+valori_distincte(a, b, c)

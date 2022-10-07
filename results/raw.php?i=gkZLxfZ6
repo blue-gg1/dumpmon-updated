@@ -1,0 +1,32 @@
+Private Sub UserForm_Initialize()
+
+'Create variables
+Dim j As Long
+Dim i As Long
+Dim temp As Variant
+Dim lstRw As Long
+Dim Sg As Worksheet
+
+'set variables values
+Set Sg = ThisWorkbook.Sheets("Data")
+lstRw = Sg.Range("U" & Rows.Count).End(xlUp).Row
+
+'populate listbox
+For i = 2 To lstRw
+    Me.ListBox1.AddItem Sg.Range("A" & i).Value
+Next i
+
+'Sort listBox in A-Z order
+With Me.ListBox1
+    For j = 0 To .ListCount - 2
+        For i = 0 To .ListCount - 2
+            If LCase(.List(i)) > LCase(.List(i + 1)) Then
+                temp = .List(i)
+                .List(i) = .List(i + 1)
+                .List(i + 1) = temp
+            End If
+        Next i
+    Next j
+End With
+
+End Sub

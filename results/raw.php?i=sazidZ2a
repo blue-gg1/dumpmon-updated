@@ -1,0 +1,55 @@
+    public void createChildRuleset() {
+        DCIteratorBinding mainRuleSetIterator = ADFUtils.findIterator("AdminOcDayAggregListView1Iterator");
+        if (null != mainRuleSetIterator) {
+            Row selectedRuleSet = mainRuleSetIterator.getCurrentRow();
+            if (null != selectedRuleSet) {
+                Integer selectedRuleSetIndex = mainRuleSetIterator.getCurrentRowIndexInRange();
+                RowSetIterator mainRuleSetRSI = mainRuleSetIterator.getRowSetIterator();
+                Row childRuleSet = mainRuleSetRSI.createRow();
+                childRuleSet.setAttribute("OcPoiCategoryId", selectedRuleSet.getAttribute("OcPoiCategoryId"));
+                childRuleSet.setAttribute("OcPoiCategoryName", selectedRuleSet.getAttribute("OcPoiCategoryName"));
+                childRuleSet.setAttribute("VoVehicleCategoryId", selectedRuleSet.getAttribute("VoVehicleCategoryId"));
+                childRuleSet.setAttribute("VoVehicleCategoryName",
+                                          selectedRuleSet.getAttribute("VoVehicleCategoryName"));
+                childRuleSet.setAttribute("VoPersonCategoryId", selectedRuleSet.getAttribute("VoPersonCategoryId"));
+                childRuleSet.setAttribute("VoPersonCategoryName",
+                                          selectedRuleSet.getAttribute("VoPersonCategoryName"));
+                childRuleSet.setAttribute("ParentOcDayAggregId", selectedRuleSet.getAttribute("OcDayAggregId"));
+                childRuleSet.setAttribute("VehicleOwnerId", selectedRuleSet.getAttribute("VehicleOwnerId"));
+                childRuleSet.setAttribute("VehicleOwnerName", selectedRuleSet.getAttribute("VehicleOwnerName"));
+                childRuleSet.setAttribute("OperationCenterId", selectedRuleSet.getAttribute("OperationCenterId"));
+                childRuleSet.setAttribute("OperationCenterName", selectedRuleSet.getAttribute("OperationCenterName"));
+                childRuleSet.setAttribute("DefaultAdminStatusId",
+                                          selectedRuleSet.getAttribute("DefaultAdminStatusId"));
+                childRuleSet.setAttribute("DefaultAdminStatusName",
+                                          selectedRuleSet.getAttribute("DefaultAdminStatusName"));
+                childRuleSet.setAttribute("OcCalendarId", selectedRuleSet.getAttribute("OcCalendarId"));
+                childRuleSet.setAttribute("OcCalendarName", selectedRuleSet.getAttribute("OcCalendarName"));
+                childRuleSet.setAttribute("DefaultWorkCodeId", selectedRuleSet.getAttribute("DefaultWorkCodeId"));
+                childRuleSet.setAttribute("WorkCodeName", selectedRuleSet.getAttribute("WorkCodeName"));
+                childRuleSet.setAttribute("StartDate", selectedRuleSet.getAttribute("StartDate"));
+                childRuleSet.setAttribute("WorkAreaPoiId", selectedRuleSet.getAttribute("WorkAreaPoiId"));
+                childRuleSet.setAttribute("WorkAreaPoiName", selectedRuleSet.getAttribute("WorkAreaPoiName"));
+                childRuleSet.setAttribute("StopAreaPoiId", selectedRuleSet.getAttribute("StopAreaPoiId"));
+                childRuleSet.setAttribute("StopAreaPoiName", selectedRuleSet.getAttribute("StopAreaPoiName"));
+                childRuleSet.setAttribute("WorkPeriodPoiId", selectedRuleSet.getAttribute("WorkPeriodPoiId"));
+                childRuleSet.setAttribute("WorkPeriodPoiName", selectedRuleSet.getAttribute("WorkPeriodPoiName"));
+                childRuleSet.setAttribute("ShortWorkPeriodPoiId",
+                                          selectedRuleSet.getAttribute("ShortWorkPeriodPoiId"));
+                childRuleSet.setAttribute("ShortWorkPeriodPoiName",
+                                          selectedRuleSet.getAttribute("ShortWorkPeriodPoiName"));
+                childRuleSet.setAttribute("PrivateStopAreaPoiId",
+                                          selectedRuleSet.getAttribute("PrivateStopAreaPoiId"));
+                childRuleSet.setAttribute("PrivateStopAreaPoiName",
+                                          selectedRuleSet.getAttribute("PrivateStopAreaPoiName"));
+                childRuleSet.setAttribute("WorkPeriodOutBhPoiName",
+                                          selectedRuleSet.getAttribute("WorkPeriodOutBhPoiName"));
+                childRuleSet.setAttribute("IsActive", selectedRuleSet.getAttribute("IsActive"));
+                childRuleSet.setAttribute("EraseModifiedData", selectedRuleSet.getAttribute("EraseModifiedData"));
+                childRuleSet.setAttribute("LimitToVdPoiDay", selectedRuleSet.getAttribute("LimitToVdPoiDay"));
+                mainRuleSetRSI.insertRowAtRangeIndex(selectedRuleSetIndex + 1, childRuleSet);
+                //                mainRuleSetRSI.insertRow(childRuleSet);
+                AdfFacesContext.getCurrentInstance().addPartialTarget(JSFUtils.findComponentInRoot("t1"));
+            }
+        }
+    }

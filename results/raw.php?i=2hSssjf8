@@ -1,0 +1,17 @@
+--[[replace these strings with the 
+    program name and pastebin index]]
+local programName = "firewolf"
+local pasteIndex = "nWxDpy7u"
+ 
+shell.run("rm "..programName)
+shell.run("pastebin get "..pasteIndex.." "..programName)
+shell.run(programName)
+ 
+--[[This simple program allows you to edit a ComputerCraft 
+program at pastebin.com and it will always update it before 
+running it. Very useful if you have many computers that need 
+to run the same code, for instance Direwolf20's Season 5frame 
+quarry with the 16 turtles. Each has to run the same code, but 
+editing then reloading that code into each turtle is tedious. 
+If you use "pastebin get M9a2L0Yw startup", this will 
+automatically get and run the program on startup or reboot.]]

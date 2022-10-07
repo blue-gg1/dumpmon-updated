@@ -1,0 +1,80 @@
+package com.example.mymath;
+
+import androidx.appcompat.app.AppCompatActivity;
+
+import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.TextView;
+import android.widget.Toast;
+
+import java.util.Random;
+
+public class MainActivity extends AppCompatActivity {
+    private Random rnd;
+    private TextView tvExercise;
+    private EditText etAnswer;
+    private Button btnCheck;
+    private int answer;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+
+        tvExercise = findViewById(R.id.tvExercise);
+        etAnswer = findViewById(R.id.etAnswer);
+        btnCheck = findViewById(R.id.btnCheck);
+
+        rnd = new Random();
+
+        showExercise();
+    }
+
+    public void showExercise() {
+        int n1, n2;
+        int op;
+        String operation = "";
+        n1 = rnd.nextInt(11);
+        n2 = rnd.nextInt(11);
+
+        op = rnd.nextInt(4);
+        if (op == 0) {
+            // +
+            operation = " + ";
+            answer = n1 + n2;
+        } else if (op == 1) {
+            // -
+            operation = " - ";
+            answer = n1 - n2;
+        } else if (op == 2) {
+            // *
+            operation = " * ";
+            answer = n1 * n2;
+        } else if (op == 3) {
+            // /
+            operation = " / ";
+            answer = n1 / n2;
+        }
+
+        tvExercise.setText(n1 + operation + n2);
+        etAnswer.setText("");
+    }
+
+
+    public void checkAnswer(View view) {
+        int userAnswer;
+
+        userAnswer = Integer.parseInt(etAnswer.getText().toString());
+
+        if (userAnswer == answer) {
+            // right answer
+            Toast.makeText(this, "good work! It's the right answer", Toast.LENGTH_LONG).show();
+            showExercise();
+        } else {
+            // wrong answer
+            Toast.makeText(this, "OOOh . . .try again", Toast.LENGTH_LONG).show();
+        }
+    }
+}

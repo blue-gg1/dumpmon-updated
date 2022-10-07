@@ -1,0 +1,24 @@
+  parseCertificateType(certificateType) {
+    certificateType.id = certificateType.certificate_type_id;
+
+    certificateType.category = this.certificateCategories.find(
+      (certificateCategory) =>
+        certificateCategory.certificate_category_id ===
+        certificateType.certificate_category_id
+    );
+    certificateType.certificate_category = certificateType.category
+      ? certificateType.category.name
+      : '';
+
+    certificateType.shareWithVoGroupId =
+      certificateType.share_with_vo_group_id === 'Y' ? true : false;
+
+
+      certificateType.companyName = this.userVehicleOwners.find(
+        (vehicleOwner) =>
+          vehicleOwner.vehicle_owner_id === certificateType.vehicle_owner_id
+      );
+      certificateType.company = certificateType.companyName ? certificateType.companyName.text : '';
+
+    return certificateType;
+  }

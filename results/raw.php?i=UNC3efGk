@@ -1,0 +1,59 @@
+--[[
+    ####--------------------------------####
+    #--# Author:   by uriid1            #--#
+    #--# License:  GNU GPLv3            #--#
+    #--# Telegram: @main_moderator      #--#
+    #--# E-mail:   appdurov@gmail.com   #--#
+    ####--------------------------------####
+--]]
+
+local path = '/sys/class/leds/'
+local led = {
+	path..'green:power/brightness';
+	path..'green:wlan/brightness';
+	path..'green:lan4/brightness';
+	path..'green:lan3/brightness';
+	path..'green:lan2/brightness';
+	path..'green:lan1/brightness';
+	path..'green:wan/brightness';
+	path..'green:usb/brightness';
+	path..'green:qss/brightness';
+}
+
+local function set_bright(led, val)
+	local fd = io.open(led, 'w')
+	fd:write(val)
+	fd:close()
+end
+
+function sleep(a)
+	local sec = os.clock() + a
+	while os.clock() < sec do end
+end
+
+local function off_all_leds()
+	for i = 1, #led do
+		set_bright(led[i], 0)
+	end
+end
+
+local function linear_activate_left(spd)
+	for i = 1, #led do
+		set_bright(led[i], 255)
+		sleep(spd)
+	end
+end
+
+local function linear_deactivate_left(spd)
+	for i = #led, 1, -1 do
+		set_bright(led[i], 0)
+		sleep(spd)
+	end
+end
+
+-- Main anim loop
+while true do                                                                                 
+	off_all_leds()
+	linear_activate_left(0.1)
+	linear_deactivate_left(0.1)
+end

@@ -1,0 +1,51 @@
+// Клас Точка в координатната система:
+
+using System;
+using System.Collections.Generic;
+
+
+namespace DemoPointTamplateClass
+{
+    public class Point<T>
+    {
+        private T x;
+        private T y;
+
+        public T X
+        {
+            get { return x; }   
+            set { x = value;  }
+        }
+        public T Y
+        {
+            get { return y; }
+            set { y = value; }
+        }
+
+        public void Info()
+        {
+            Console.WriteLine("Generic type: {0}", this.x.GetType());
+            Console.WriteLine("x={0}, y={1}", x,y);
+        }
+    }
+}
+
+//Главен клас на програмата:
+namespace DemoPointTamplateClass
+{
+    internal class Program
+    {
+        static void Main(string[] args)
+        {
+            Point<int> point1 = new Point<int>();
+            point1.X = 100;
+            point1.Y = 100;
+            point1.Info();
+
+            Point<double> point2 = new Point<double>();
+            point2.X = 10.01;
+            point2.Y = 100.12;
+            point1.Info();
+        }
+    }
+}

@@ -1,0 +1,4 @@
+import operator
+
+def comp(f, g, op):
+    return lambda x : op(f(x), g(x))

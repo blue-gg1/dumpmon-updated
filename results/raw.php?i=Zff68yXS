@@ -1,0 +1,45 @@
+/***********************/
+/*   GROOVY - Users    */
+/***********************/
+
+// Obtener el usuario logado
+// Obtener un usuario por username
+// Ejecutar una acción como usuario administrador
+// Consultar si un usuario pertenece a un determinado rol
+// Obtener / Setear las propiedades de usuario nativas de Jira
+ 
+/************************************************************************/
+
+// Obtener el usuario logado
+def userLogged = ComponentAccessor.jiraAuthenticationContext.loggedInUser
+/************************************/
+
+// Obtener un usuario por username
+def userAdmin = ComponentAccessor.getUserManager().getUserByName("admin")
+/************************************/
+
+// Ejecutar una acción como usuario administrador
+def jiraAuthenticationContext = ComponentAccessor.jiraAuthenticationContext
+def adminUser = ComponentAccessor.getUserManager().getUserByName("admin")
+def originalUser = jiraAuthenticationContext.loggedInUser
+.....
+jiraAuthenticationContext.setLoggedInUser(adminUser)
+issue.setCustomFieldValue(previousStatusCF, issue.getStatus().getName())
+ComponentAccessor.getIssueManager().updateIssue(adminUser, issue, EventDispatchOption.DO_NOT_DISPATCH, false)
+jiraAuthenticationContext.setLoggedInUser(originalUser)
+/************************************/
+
+// Consultar si un usuario pertenece a un determinado rol
+def projectRoleManager = ComponentAccessor.getComponentOfType(ProjectRoleManager)
+def roleAdministrators = projectRoleManager.getProjectRole("Administrators")
+if (projectRoleManager.isUserInProjectRole(userLogged, roleAdministrators, issue.getProjectObject())) { ..... }
+/************************************/
+
+// Obtener / Setear las propiedades de usuario nativas de Jira
+final userPropertyKey = "jira.meta.favoritePlugin"
+final userPropertyValue = "ScriptRunner"
+def user = ComponentAccessor.userManager.getUserByName("username")
+.....
+ComponentAccessor.userPropertyManager.getPropertySet(user).setString(userPropertyKey, userPropertyValue)
+ComponentAccessor.userPropertyManager.getPropertySet(user).getString(userPropertyKey)
+/************************************/

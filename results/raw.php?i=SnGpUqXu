@@ -1,0 +1,50 @@
+/************************/
+/*   GROOVY - Issues    */
+/************************/
+
+// Obtener una issue por su key
+// Metodos de la issue
+// Obtener y filtrar las subtareas de una issue
+// Transicionar una issue
+// Clonar una issue
+ 
+/************************************************************************/
+
+// Obtener una issue por su key
+def issue = ComponentAccessor.getIssueManager().getIssueObject("XEMA-6426")
+
+// Metodos de la issue
+issue.getKey()
+issue.getStatus().getName()
+issue.getReporter()
+/************************************/
+
+// Obtener y filtrar las subtareas de una issue
+def subTaskIssues = subTaskManager.getSubTaskObjects(issue)
+def subTaskIssuesApproval = subTaskIssues.find { subTaskIssue ->
+	subTaskIssue.getIssueType().getName().equals("Approval")
+}.collect()
+.....	
+if (subTaskIssuesApproval.isEmpty()) { ..... }
+/************************************/
+
+// Transicionar una issue
+def transitionIdDone = 31
+def transitionOptions = new TransitionOptions.Builder()
+def validationResult = issueService.validateTransition(userLogged, issue.getId(), transitionIdDone, 
+		issueService.newIssueInputParameters(), transitionOptions)
+if (validationResult.isValid()) {
+	issueService.transition(userLogged, validationResult)
+}
+/************************************/
+
+// Clonar una issue
+def adminUser = ComponentAccessor.getUserManager().getUserByName("admin")
+def clone = ComponentAccessor.issueFactory.cloneIssueWithAllFields(issue)
+clone.setReporter(adminUser)
+clone.setAssignee(null)
+clone.setCreated(new Timestamp(System.currentTimeMillis()))
+clone.setResolutionDate(null)
+clone.setUpdated(null)
+def issueCloned = ComponentAccessor.issueManager.createIssueObject(adminUser, clone)
+/************************************/

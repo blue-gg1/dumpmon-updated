@@ -1,0 +1,131 @@
+#include <vector>
+#include <algorithm>
+
+using namespace std;
+
+const int base = 10;
+
+vector <int> add(const vector <int>& a, const vector <int>& b) {
+    vector <int> c(max(a.size(), b.size()));
+    for (size_t i = 0; i < max(a.size(), b.size()); i++) {
+        if (i < a.size() && i < b.size()) {
+            c[i] += a[i] + b[i];
+        } else if (a.size() > b.size()) {
+            c[i] += a[i];
+        } else {
+            c[i] += b[i];
+        }
+
+        if (c[i] < base) continue;
+        if (i + 1 == c.size()) {
+            c.push_back(1);
+        } else {
+            c[i + 1]++;
+        }
+        c[i] -= base;
+    }
+
+    return c;
+}
+
+vector <int> sub(const vector <int>& a, const vector <int>& b) {
+    vector <int> c(max(a.size(), b.size()));
+    for (size_t i = 0; i < max(a.size(), b.size()); i++) {
+        if (i < a.size() && i < b.size()) {
+            c[i] += a[i] - b[i];
+        } else {
+            c[i] += a[i];
+        }
+
+        if (c[i] >= 0) continue;
+        if (i + 1 == c.size()) {
+            c.push_back(-1);
+        } else {
+            c[i + 1]--;
+        }
+        c[i] += base;
+    }
+
+    while (c.size() > 1 && c.back() == 0) {
+        c.pop_back();
+    }
+
+    return c;
+}
+
+void normalize(vector <int>& a) {
+    for (size_t i = 0; i < a.size(); i++) {
+        if (a[i] < base) continue;
+        if (i + 1 == a.size()) {
+            a.push_back(a[i] / base);
+        } else {
+            a[i + 1] += a[i] / base;
+        }
+        a[i] %= base;
+    }
+
+    while (a.size() > 1 && a.back() == 0) {
+        a.pop_back();
+    }
+}
+
+void shift(vector <int>& a, int x) {
+    reverse(a.begin(), a.end());
+    while (x--) {
+        a.push_back(0);
+    }
+    reverse(a.begin(), a.end());
+}
+
+vector <int> naive(vector <int>& a, vector <int>& b) {
+    vector <int> c(a.size() + b.size() - 1);
+    for (size_t i = 0; i < a.size(); i++) {
+        for (size_t j = 0; j < b.size(); j++) {
+            c[i + j] += a[i] * b[j];
+        }
+    }
+
+    normalize(c);
+    return c;
+}
+
+vector <int> mul(vector <int> a, vector <int> b);
+
+vector <int> karatsuba(vector <int>& a, vector <int>& b) {
+    while (a.size() % 2) a.push_back(0);
+    while (b.size() % 2) b.push_back(0);
+    while (a.size() < b.size()) a.push_back(0);
+    while (b.size() < a.size()) b.push_back(0);
+
+    size_t n = a.size();
+
+    vector <int> a1(n / 2), a2(n / 2), b1(n / 2), b2(n / 2);
+    for (size_t i = 0; i < n / 2; i++) {
+        a1[i] = a[i];
+        b1[i] = b[i];
+    }
+    for (size_t i = n / 2; i < n; i++) {
+        a2[i - n / 2] = a[i];
+        b2[i - n / 2] = b[i];
+    }
+
+    auto a1b1 = mul(a1, b1);
+    auto a2b2 = mul(a2, b2);
+    auto k = sub(sub(mul(add(a1, a2), add(b1, b2)), a1b1), a2b2);
+
+    shift(k, n / 2);
+    shift(a2b2, n);
+
+    vector <int> c = add(a1b1, add(k, a2b2));
+
+    normalize(c);
+    return c;
+}
+
+vector <int> mul(vector <int> a, vector <int> b) {
+    if (a.size() <= 3 && b.size() <= 3) {
+        return naive(a, b);
+    } else {
+        return karatsuba(a, b);
+    }
+}

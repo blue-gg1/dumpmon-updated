@@ -1,0 +1,71 @@
+# https://beets.readthedocs.io/en/stable/reference/config.html#
+plugins: acousticbrainz albumtypes beatport chroma convert discogs duplicates embedart fetchart fromfilename fuzzy info lastgenre mbsync missing permissions play random replaygain rewrite scrub web
+directory: /music
+library: /config/musiclibrary.blb
+art_filename: albumart
+threaded: yes
+original_date: no
+per_disc_numbering: no
+
+acousticbrainz:
+    auto: yes
+
+acoustid:
+    apikey: mysecretapikey
+
+albumtypes:
+    types:
+        - ep: 'EP'
+        - single: 'Single'
+        - soundtrack: 'OST'
+        - live: 'Live'
+        - compilation: 'Anthology'
+        - remix: 'Remix'
+    ignore_va: compilation
+    bracket: '[]'
+
+chroma:
+    auto: yes
+
+convert:
+    auto: yes
+    ffmpeg: /usr/bin/ffmpeg
+# originally working with:
+#    opts: -ab 256k -ac 2 -ar 48000
+# see https://trac.ffmpeg.org/wiki/Encode/MP3
+# possibly use -q:a 3 instead of -aq 3 ???
+    opts: -ac 2 -ar 48000 -acodec libmp3lame -aq 3
+    max_bitrate: 256
+    threads: 1
+    never_convert_lossy_files: yes
+    delete_originals: true
+
+embedart:
+    auto: yes
+
+fetchart:
+    auto: yes
+
+import:
+    write: yes
+    copy: no
+    move: yes
+    resume: ask
+    incremental: yes
+    incremental_skip_later: yes
+    quiet_fallback: skip
+    timid: no
+    log: /config/beet.log
+
+lastgenre:
+    auto: yes
+
+paths:
+    default: $albumartist/$album%aunique{}/$track - $title
+    singleton: Non-Album/$artist - $title
+    comp: Various Artists/$album%aunique{}/$track - $title
+    albumtype:soundtrack: Soundtracks/$album/$track - $title
+
+permissions:
+    file: 660
+    dir: 770

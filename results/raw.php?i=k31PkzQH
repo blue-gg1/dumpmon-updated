@@ -1,0 +1,53 @@
+class KohonenNet():
+
+    def __init__(self, m=3, n=3, lr=1, sigma=1, max_iter=3000, weights = []):
+        self.m = m #количество классов
+        self.n = n #количество уровней сети
+        self.shape = (m, n)
+        self.initial_lr = lr
+        self.lr = lr #скорость обучения
+        self.sigma = sigma #параметр изменения скорости обучения (она будет снижаться с каждой итерацией)
+        self.max_iter = max_iter
+        self.weights = weights
+
+    #функция нахождения выигравшего нейрона (нейрона с минимальным расстоянием до точки)
+    def _find_bmu(self, x):
+        x_stack = np.stack([x]*(self.m*self.n), axis=0)#матрица размером [количество центров кластеров(нейронов), количество признаков] (для каждого веса своя строка признаков(точка))
+        distance = np.linalg.norm(x_stack - self.weights, axis=1)#эвклидовы расстояния между точкой выборки и нейронами
+        return np.argmin(distance)#возвращаем индекс минимального расстояния (индекс подходящего нейрона)
+
+    def step(self, x):
+        x_stack = np.stack([x]*(self.m*self.n), axis=0)#матрица размером [количество весов, количество признаков] (для каждого веса своя строка признаков(точка))    
+        bmu_index = self._find_bmu(x)#передаем в функцию строку признаков (точку) и получаем индекс выйгравшего нейрона (центра кластера)
+        self.weights[bmu_index] += self.lr * (x - self.weights[bmu_index])
+
+    #обучение весов
+    def fit(self, X, epochs=1, shuffle=True):
+        global_iter_counter = 0
+        n_samples = X.shape[0]#количество элементов выборки
+        total_iterations = np.minimum(epochs * n_samples, self.max_iter)#количество обучения весов в эпохе
+        for epoch in range(epochs):#изначально у нас 1 эпоха
+            if global_iter_counter > self.max_iter:#не даем проводить больше 3000 эпох
+                break
+            if shuffle:
+                indices = np.random.permutation(n_samples)#создание массива с индексами в разброс
+            else:
+                indices = np.arange(n_samples)#создание массива с индексами по порядку
+            #обучение
+            for idx in indices:#проход по выборке с индексами idx
+                if global_iter_counter > self.max_iter:
+                    break
+                input = X[idx]
+                #перемещение нейрона(изменение весов победившего нейрона)
+                self.step(input)
+                global_iter_counter += 1
+                self.lr = (1 - (global_iter_counter / total_iterations)) * self.initial_lr#изменение параметра обучения
+        self._n_iter_ = global_iter_counter
+        return
+
+    def returnChangedWeights(self):
+        return self.weights
+
+    def predict(self, X):
+        labels = np.array([self._find_bmu(x) for x in X])
+        return labels

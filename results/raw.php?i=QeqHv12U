@@ -1,0 +1,17 @@
+/*************************/
+/*   GROOVY - Imports    */
+/*************************/
+
+import com.atlassian.jira.component.ComponentAccessor
+import com.atlassian.jira.issue.CustomFieldManager
+import com.atlassian.jira.security.roles.ProjectRoleManager
+import com.onresolve.scriptrunner.runner.customisers.PluginModule
+import com.onresolve.scriptrunner.runner.customisers.WithPlugin
+
+@PluginModule
+CustomFieldManager customFieldManager
+//// Alternativas
+def customFieldManager = ComponentAccessor.getCustomFieldManager()
+def customFieldManager = ComponentAccessor.customFieldManager
+
+def projectRoleManager = ComponentAccessor.getComponentOfType(ProjectRoleManager)

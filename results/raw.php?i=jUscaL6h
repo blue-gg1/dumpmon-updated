@@ -1,0 +1,150 @@
+cl = 1
+
+write("Forward:")
+ 
+local f = tonumber(read())
+ 
+ 
+write("Right:")
+ 
+local r = tonumber(read())
+ 
+ 
+write("Up:")
+ 
+local u = tonumber(read())
+ 
+function dig()
+	while turtle.detect() == true do
+		turtle.dig()
+	end
+end
+
+function digUp()
+	while turtle.detectUp() == true do
+		turtle.digUp()
+	end
+end
+		
+function digDown()
+	while turtle.detectDown() == true do
+		turtle.digDown()
+	end
+end	
+ 
+function forward()
+    local keepGoing = true
+    while keepGoing do
+        if turtle.forward() then
+            keepGoing = false
+        end
+    end
+end
+ 
+function up()
+    local keepGoing = true
+    while keepGoing do
+        if turtle.up() then
+            keepGoing = false
+        end
+    end
+end
+ 
+function down()
+    local keepGoing = true
+    while keepGoing do
+        if turtle.down() then
+            keepGoing = false
+        end
+    end
+end
+
+function chest()
+	if cl > 16 then
+		cl = 1
+	end
+	turtle.select(cl)
+	if turtle.getItemCount(cl) <= 1 then
+		cl = cl + 1
+		if cl > 16 then
+			cl = 1
+		end
+		turtle.select(cl)
+	end
+end
+
+function chestUp()
+
+	turtle.select(cl)
+end
+
+turtle.select(1)
+ 
+for i = 1, u do
+    for j = 1, r do
+            for k = 1, f-1 do
+                dig()
+				digDown()
+                chest()
+				turtle.placeDown()
+                forward()
+            end
+            if j ~= r then
+                if j%2 ~= 0 then
+                    turtle.turnRight()
+                    dig()
+					digDown()
+                    chest()
+					turtle.placeDown()
+                    forward()
+                    turtle.turnRight()
+                end
+                if j%2 == 0 then
+                    turtle.turnLeft()
+                    dig()
+                    chest()
+					turtle.placeDown()
+                    forward()
+                    turtle.turnLeft()
+                end
+            end
+    end
+ 
+    if r%2 == 0 then
+        turtle.turnRight()
+        for b = 1, r-1 do
+			digDown()
+            chest()
+			turtle.placeDown()
+            forward()
+        end
+        turtle.turnRight()
+    end
+ 
+    if r%2 ~= 0 then
+		digDown()
+        chest()
+		turtle.placeDown()
+        for b = 1, f-1 do
+            turtle.back()
+        end
+        turtle.turnLeft()
+        for b = 1, r-1 do
+			digDown()
+            chest()
+			turtle.placeDown()
+            forward()
+        end
+        turtle.turnRight()
+    end
+  
+    if i ~= u then
+        digUp()
+        chestUp()
+        up()
+    end
+end
+ 
+for d = 1, u-1 do
+    down()
+end

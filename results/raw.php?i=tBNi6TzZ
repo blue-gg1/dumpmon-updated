@@ -1,0 +1,2 @@
+def med(a, b, c):
+    return a + b + c - min(min(a, b), c) - max(max(a, b), c)

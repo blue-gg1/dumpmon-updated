@@ -1,0 +1,188 @@
+#include <bits/stdc++.h>
+
+using namespace std;
+
+void Gauss();
+
+int main() {
+    ios::sync_with_stdio(0);
+    cin.tie(0);
+    cout.tie(0);
+#ifdef LOCAL
+    freopen("input.txt", "r", stdin);
+    freopen("output.txt", "w", stdout);
+#endif
+    Gauss();
+    return 0;
+}
+
+struct oint {
+    int a = 0, b = 1;
+
+    oint() = default;
+
+    explicit oint(int a) : a(a) {}
+
+    oint(int a, int b) : a(a), b(b) {}
+
+    [[nodiscard]] oint normalized() const {
+        int gc = gcd(a, b);
+        if (a < 0 && b < 0) {
+            gc = -gc;
+        }
+        oint res(a / gc, b / gc);
+        if (res.a > 0 && res.b < 0) {
+            res.a = -res.a;
+            res.b = -res.b;
+        }
+        return res;
+    }
+
+    oint operator+(const oint& other) const {
+        int gc = gcd(b, other.b);
+        int nok = b * other.b / gc;
+        return oint(a * other.b / gc + other.a * b / gc, nok).normalized();
+    }
+
+    oint operator-(const oint& other) const {
+        int gc = gcd(b, other.b);
+        int nok = b * other.b / gc;
+        return oint(a * other.b / gc - other.a * b / gc, nok).normalized();
+    }
+
+    oint operator*(int k) const {
+        return oint(a * k, b).normalized();
+    }
+
+    oint operator/(const oint& other) const {
+        return oint(a * other.b, other.a * b).normalized();
+    }
+
+    bool operator==(int k) const {
+        return a == b * k;
+    }
+};
+
+void Print(const vector<vector<int>>& a) {
+    for (size_t i = 0; i < a.size(); ++i) {
+        for (size_t j = 0; j < a[i].size(); ++j) {
+            cout << a[i][j] << " ";
+        }
+        cout << '\n';
+    }
+    cout << endl;
+}
+
+void NormalizeSLU(vector<vector<int>>& a) {
+    for (size_t i = 0; i < a.size(); ++i) {
+        int gc = 0;
+        for (size_t j = 0; j < a[i].size(); ++j) {
+            if (a[i][j] != 0) {
+                if (gc == 0) {
+                    gc = abs(a[i][j]);
+                } else {
+                    gc = __gcd(gc, abs(a[i][j]));
+                }
+            }
+        }
+        if (gc != 0) {
+            for (size_t j = 0; j < a[i].size(); ++j) {
+                a[i][j] /= gc;
+            }
+        }
+    }
+}
+
+void Print(const vector<vector<oint>>& a) {
+    for (size_t i = 0; i < a.size(); ++i) {
+        for (size_t j = 0; j < a[i].size(); ++j) {
+            if (a[i][j].a % a[i][j].b == 0) {
+                cout << a[i][j].a / a[i][j].b << " ";
+            } else {
+                cout << a[i][j].a << "/" << a[i][j].b << " ";
+            }
+        }
+        cout << '\n';
+    }
+    cout << endl;
+}
+
+void NormalizeSLU(vector<vector<oint>>& a) {
+    for (size_t i = 0; i < a.size(); ++i) {
+        int gc = 0;
+        for (size_t j = 0; j < a[i].size(); ++j) {
+            a[i][j] = a[i][j].normalized();
+            if (a[i][j].a != 0) {
+                if (gc == 0) {
+                    gc = abs(a[i][j].a);
+                } else {
+                    gc = __gcd(gc, abs(a[i][j].a));
+                }
+            }
+        }
+        if (gc != 0) {
+            for (size_t j = 0; j < a[i].size(); ++j) {
+                a[i][j].a /= gc;
+            }
+        }
+    }
+}
+
+void Gauss() {
+    int n;
+    cin >> n;
+    vector<vector<int>> a(n);
+    for (int i = 0; i < n; ++i) {
+        a[i].resize(n + 1);
+        for (int j = 0; j < n + 1; ++j) {
+            cin >> a[i][j];
+        }
+    }
+    for (int j = 0; j < n; ++j) {
+        for (int i = j; i < n; ++i) {
+            if (a[i][j] != 0) {
+                swap(a[j], a[i]);
+                break;
+            }
+        }
+        for (int i = j + 1; i < n; ++i) {
+            if (a[i][j] == 0) continue;
+            int gc = __gcd(a[j][j], a[i][j]);
+            int k1 = a[i][j] / gc;
+            int k2 = a[j][j] / gc;
+            for (int h = j; h < n + 1; ++h) {
+                a[i][h] = a[i][h] * k2 - a[j][h] * k1;
+            }
+        }
+    }
+
+    cout << "Step view:" << '\n';
+    NormalizeSLU(a);
+    Print(a);
+
+    vector<vector<oint>> b(n);
+    for (int i = 0; i < n; ++i) {
+        b[i].resize(n + 1);
+        for (int j = 0; j < n + 1; ++j) {
+            b[i][j] = oint(a[i][j]);
+        }
+    }
+
+    for (int j = n - 1; j >= 0; --j) {
+        if (b[j][j] == 0) continue;
+        oint k = b[j][j];
+        for (int h = j; h < n + 1; ++h) {
+            b[j][h] = b[j][h] / k;
+        }
+        for (int i = j - 1; i >= 0; --i) {
+            int e = a[i][j];
+            for (int h = j; h < n + 1; ++h) {
+                b[i][h] = b[i][h] - b[j][h] * e;
+            }
+        }
+    }
+
+    cout << "Improved step view:" << '\n';
+    NormalizeSLU(b);
+    Print(b);
+}

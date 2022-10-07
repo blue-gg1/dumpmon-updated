@@ -1,0 +1,198 @@
+#include <bits/stdc++.h>
+#include <ext/pb_ds/assoc_container.hpp>
+#include <ext/pb_ds/tree_policy.hpp>
+
+using namespace std;
+using namespace __gnu_pbds;
+
+#define int long long
+#define mp make_pair
+#define pb push_back
+
+#pragma GCC optimize("Ofast")
+#pragma GCC optimize("unroll-loops")
+#pragma GCC target("avx2")
+
+constexpr int N = (int)8e4+11;
+constexpr int INF = (int)1e9 + 12315;
+constexpr int md = (int)1e9 + 7;
+constexpr int K = 1;
+
+int A[N],B[N];
+
+/// a+b is maximized, so b < M-a and b is maximum
+/// a+b-M is maximized, so b is just maximum
+int n,M,q;
+int f(vector<int>& v,int val){
+    int x = M - val;
+    if(v[0] >= x) return 0;
+    int pos = upper_bound(v.begin(),v.end(),x) - v.begin();
+    pos = min(pos,(int)v.size()-1);
+    while(pos >= 0 && v[pos] >= x) pos--;
+    int S = (val + v[pos]);
+    if(S >= M) S -= M;
+    return S;
+}
+
+void solve(){
+    cin >> n >> M >> q;
+
+    for(int i = 0; i < n; i++) cin >> A[i];
+    for(int i = 0; i < n; i++) cin >> B[i];
+
+    int prec[n/K+1][n/K+1];
+    vector<int> AA[n/K+1];
+    vector<int> BB[n/K+1];
+    memset(prec,0,sizeof prec);
+    vector<int> v;
+
+    {
+        set<int> st[2][n/K+1];
+        for(int i = 0; i < n; i++){
+            st[0][i/K].insert(A[i]);
+            st[1][i/K].insert(B[i]);
+        }
+        for(int i = 0; i < n/K; i++){
+            AA[i] = vector<int>(st[0][i].begin(),st[0][i].end());
+            BB[i] = vector<int>(st[1][i].begin(),st[1][i].end());
+        }
+    }
+    set<int> st;
+
+    for(int i = 0; K * i < n; i++){
+        for(int j = 0; K * j < n; j++){
+            int p1 = K * i, p2 = K*j;
+            int mx1 = 0, mx2 = 0;
+            st.clear();
+            for(int t = p2; t < min(n,p2 + K); t++){
+                st.insert(B[t]);
+            }
+            v = vector<int>(st.begin(),st.end());
+            for(int t = p1; t < min(n,p1 + K); t++){
+                mx1 = max(mx1,A[t]);
+                prec[i][j] = max(prec[i][j],f(v,A[t]));
+            }
+
+            st.clear();
+            for(int t = p1; t < min(n,p1 + K); t++){
+                st.insert(A[t]);
+            }
+            v = vector<int>(st.begin(),st.end());
+            for(int t = p2; t < min(n,p2 + K); t++){
+                mx2 = max(mx2,B[t]);
+                prec[i][j] = max(prec[i][j],f(v,B[t]));
+            }
+            prec[i][j] = max(prec[i][j],(mx1+mx2)%M);
+        }
+    }
+
+    while(q--){
+        int a,b,c,d;
+        cin >> a >> b >> c >> d;
+        a--, b--, c--, d--;
+
+        int block11 = a/K;
+        int block12 = b/K;
+        int block21 = c/K;
+        int block22 = d/K;
+
+        int ans = 0;
+        int MX1 = 0, MX2 = 0;
+//        for(int i = a; i <= b; i++) MX1 = max(MX1,A[i]);
+//        for(int i = c; i <= d; i++) MX2 = max(MX2,B[i]);
+
+        for(int i = block11+1; i <= block12-1; i++){
+            for(int j = block21+1; j <= block22-1; j++){
+                ans = max(ans,prec[i][j]);
+//                cerr << "Segments [" << i*K+1 << ", " << (i+1)*K << "], [" << j*K+1 << ", " << (j+1)*K << "]\n";
+            }
+        }
+        int r1 =
+
+        for(int i = a; i < min(b+1,(block11+1)*K); i++){
+            MX1 = max(MX1,A[i]);
+            for(int j = c; j < min(d+1,(block21+1)*K); j++){
+                int S = A[i] + B[j];
+                if(S >= M) S -= M;
+                ans = max(ans,S);
+            }
+            for(int j = max(c,block22*K); j <= d; j++){
+                int S = A[i] + B[j];
+                if(S >= M) S -= M;
+                ans = max(ans,S);
+            }
+            for(int j = block21+1; j <= block22-1; j++){
+                MX2 = max(MX2,BB[j].back());
+                ans = max(ans,f(BB[j],A[i]));
+            }
+        }
+
+        for(int i = max(a,block12*K); i <= b; i++){
+            MX1 = max(MX1,A[i]);
+            for(int j = c; j < min(d+1,(block21+1)*K); j++){
+                int S = A[i] + B[j];
+                if(S >= M) S -= M;
+                ans = max(ans,S);
+            }
+            for(int j = max(c,block22*K); j <= d; j++){
+                int S = A[i] + B[j];
+                if(S >= M) S -= M;
+                ans = max(ans,S);
+            }
+            for(int j = block21+1; j <= block22-1; j++){
+                MX2 = max(MX2,BB[j].back());
+                ans = max(ans,f(BB[j],A[i]));
+            }
+        }
+
+        for(int j = c; j < min(d+1,(block21+1)*K); j++){
+            MX2 = max(MX2,B[j]);
+            for(int i = a; i < min(b+1,(block11+1)*K); i++){
+                int S = A[i] + B[j];
+                if(S >= M) S -= M;
+                ans = max(ans,S);
+            }
+            for(int i = max(a,block12*K); i <= b; i++){
+                int S = A[i] + B[j];
+                if(S >= M) S -= M;
+                ans = max(ans,S);
+            }
+            for(int i = block11+1; j <= block12-1; j++){
+                MX1 = max(MX1,AA[i].back());
+                ans = max(ans,f(AA[i],B[j]));
+            }
+        }
+        for(int j = max(c,block22*K); j <= d; j++){
+            MX2 = max(MX2,B[j]);
+            for(int i = a; i < min(b+1,(block11+1)*K); i++){
+                int S = A[i] + B[j];
+                if(S >= M) S -= M;
+                ans = max(ans,S);
+            }
+            for(int i = max(a,block12*K); i <= b; i++){
+                int S = A[i] + B[j];
+                if(S >= M) S -= M;
+                ans = max(ans,S);
+            }
+            for(int i = block11+1; j <= block12-1; j++){
+                MX1 = max(MX1,AA[i].back());
+                ans = max(ans,f(AA[i],B[j]));
+            }
+        }
+        ans = max(ans,(MX1+MX2)%M);
+
+        cout << ans << "\n";
+    }
+
+    return;
+}
+
+signed main(){
+    ios::sync_with_stdio(false); cin.tie(nullptr);cout.tie(nullptr);
+    int tests = 1;
+//    cin >> tests;
+    for(int test = 1; test <= tests; test++){
+        solve();
+    }
+    return 0;
+}

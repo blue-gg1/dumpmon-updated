@@ -1,0 +1,2 @@
+x = int(input("x="))
+print((lambda x : x + 15)(x))

@@ -1,0 +1,220 @@
+# string manipulation and error handling today!
+print("Welcome!")
+
+# NEW FILE
+
+# we can alternate quotation marks and single quotes
+# to literally print out quotation marks too
+name = 'John "Supercoder" Doe'
+print(name)
+
+# escaping the quotation marks works too
+# => basically we're marking down quotation marks exactly in our string
+name = "John \"Supercoder\" Doe"
+print(name)
+
+# NEW FILE
+
+text = "Rovaniemi is a city near Arctic Circle, and it tends be rather chilly in January."
+print(text)
+
+# substring, partial text => from first character to 25th
+# first character is at position 0, second in position 1 etc.
+subtext = text[0:25]
+print(subtext)
+
+# take a substring from the middle
+# make sure you're not trying to slice positions
+# that do not exist (for example if string is too short()
+subtext = text[10:30]
+print(subtext)
+
+# get last 10 characters from string
+subtext = text[-10:]
+print(subtext)
+
+# take out the last character
+# in this case, the extra dash (-) we have
+years = "2022-2021-2020-2019-2018-"
+years = years [0:-1]
+
+print(years)
+
+# NEW FILE
+
+text = input("Please write something:\n")
+
+# how long is this text? whitespaces also count!
+text_length = len(text)
+print(text_length)
+
+# check if user actually gave any text
+if text_length == 0:
+    print("User didn't input any text!")
+else:
+    # user gave some text! is the text long or not?
+    if text_length > 30:
+        print("Long text!")
+    else:
+        print("Short text...")
+
+# NEW FILE
+
+text = "The autumn colors seem to be quite bright this time of year."
+print(text)
+
+# how many letter a in this string?
+# note: capital letters are different letters than lowercase
+a_letters = text.count("a")
+print(f"Amount of letter a: {a_letters}")
+
+# for example: the capital T in the beginning 
+# doesn't count!
+t_letters = text.count("t")
+print(f"Amount of letter a: {t_letters}")
+
+# NEW FILE
+
+text = input("Write something:\n")
+
+# reverse the text
+reversed_text = text[::-1]
+
+# for a few palindromes, try tacocat and racecar
+# palindrome = text is exactly same even if reversed
+print(reversed_text)
+
+# NEW FILE
+
+drinks = "soda, milk, coffee, tea, soda, water"
+
+# replace all soda with juice
+# try also drinks.replace("soda", "juice", 1) in order to
+# replace only the first soda in the text!
+new_drinks = drinks.replace("soda", "juice")
+print(new_drinks)
+print()
+
+# commas to newlines!
+new_drinks2 = new_drinks.replace(", ", "\n")
+print(new_drinks2)
+print()
+
+# check if a string is inside a string
+text = input("What would you like to drink?\n")
+
+# check if text inside drinks
+if text in drinks:
+    print("Found it!")
+else:
+    print("That drink not available :(")
+
+# NEW FILE
+
+text = input("Give a number?\n")
+
+# check if user actually gave a number or text
+if text.isnumeric():
+    print("User gave a number!")
+
+    # we can now trust the user actually gave a number
+    number = int(text)
+    number = number * 2
+    print(number)
+else:
+    print("User gave text!")
+
+# NEW FILE
+
+text = input("Are you student or adult? (a/s)\n")
+
+# convert the user input to lowercase, ALWAYS
+# without this, the if-statements would have to be something like
+# if text == "a" or text == "A": etc
+text = text.lower()
+
+# check the result
+if text == "a":
+    print("Adult!")
+elif text == "s":
+    print("Student!")
+else:
+    print("Incorrect selection.")
+
+# NEW FILE
+
+# we have some code in try-block
+# that might crash (converting text into integer)
+# what if user writes text instead?
+try:
+    number = input("Give a number:\n")
+    number = int(number)
+    print(number)
+except ValueError:
+    # handle the error message!
+    print("Please write a number instead.")
+
+# NEW FILE
+
+# we have some code in try-block
+# that might crash (converting text into integer)
+# what if user writes text instead?
+try:
+    number = input("Give a number:\n")
+    number = int(number)
+    result = 100 / number
+    print(f"Number: {number}, result: {result}")
+except ValueError:
+    # handle the error message!
+    print("Please write a number instead.")
+except ZeroDivisionError:
+    print("You can't divide by zero!")
+
+# NEW FILE
+
+# we have some code in try-block
+# that might crash (converting text into integer)
+# what if user writes text instead?
+# you can also catch all errors with the generic
+# except statement
+try:
+    number = input("Give a number:\n")
+    number = int(number)
+    result = 100 / number
+    print(f"Number: {number}, result: {result}")
+except Exception as e:
+    print("Error: " + str(e))
+
+# NEW FILE
+
+# an example: we can have a client id following this format: C1234_4567
+# the logic:
+# exactly 10 characters long, sixth character has to be underscore
+# last for characters has to be an integer
+
+try:
+    client = input("Give client id:\n")
+    
+    # get client id length
+    text_length = len(client)
+
+    # the client id should be exactly 10 characters long
+    # sixth character should be an underscore
+    if text_length != 10:
+        print("Incorrect length for client id.")
+    elif client[5] != "_":
+        print("Underscore missing in client id.")
+    else:
+        print("Seems okay!")
+
+        # use substring to get two parts out of client id
+        id = client[0:5]
+        order = client[6:10]
+        order = int(order)
+
+        print(id)
+        print(order)
+
+except Exception as e:
+    print("Error: " + str(e))
+    

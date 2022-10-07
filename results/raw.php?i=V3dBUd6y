@@ -1,0 +1,23 @@
+/*************************/
+/*   GROOVY - Strings    */
+/*************************/
+
+// Comparar cadena de texto con expresión regular
+// Utilidades
+
+/************************************************************************/
+
+// Comparar cadena de texto con expresión regular
+import java.util.regex.Matcher
+import java.util.regex.Pattern
+.....
+Pattern pattern = Pattern.compile("[^N]OK|^OK");
+Matcher match = pattern.matcher(requirementStatusValue.toString());
+if (match.find()) { ..... }
+/************************************/
+
+// Utilidades
+Objects.isNull(regTestCycleValue)
+Objects.nonNull(regTestCycleValue)
+StringUtils.isBlank(regTestCycleValue)
+/************************************/
