@@ -8,3 +8,4 @@ systemctl start docker.service
 systemctl status docker.service 
 
 docker start test-db
+docker ps
